@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "postinstall": "bower cache clean && bower install"
   },
   "engines": {
     "node":"0.10.x",
@@ -26,7 +27,8 @@
     "jade": "^1.11.0",
     "mongoose": "^4.9.8",
     "morgan": "^1.8.1",
-    "stylus": "^0.54.5"
+    "stylus": "^0.54.5",
+    "bower": "^1.8.0"
   },
   "devDependencies": {
     "bower": "^1.8.0"
