@@ -1,2 +1,9 @@
-h1 This is partial
-h2 {{ myVar }}
+.container
+    .jumbotron
+        h1 MultiVison
+        p Welcome to MultiVison
+    .row
+        .col-md-6
+            div(ng-include="'/partials/featured-courses'")
+        .col-md-6
+            div(ng-include="'/partials/new-courses'")

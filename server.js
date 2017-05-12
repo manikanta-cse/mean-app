@@ -45,20 +45,20 @@ db.once('open', function cb() {
 });
 
 //creating schema
-var messageSchema = mongoose.Schema({ message: String });
-var Message = mongoose.model('Message', messageSchema);
-var mongoMessage;
+// var messageSchema = mongoose.Schema({ message: String });
+// var Message = mongoose.model('Message', messageSchema);
+// var mongoMessage;
 
-Message.findOne().exec(function (err, messageDoc) {
-    mongoMessage = messageDoc.message;
-});
+// Message.findOne().exec(function (err, messageDoc) {
+//     mongoMessage = messageDoc.message;
+// });
 
 app.get('/partials/:partialPath', function (req, resp) {
     resp.render('partials/' + req.params.partialPath);
 });
 
 app.get('*', function (req, resp) {
-    resp.render('index', { mongoMessage: mongoMessage });
+    resp.render('index');
 });
 
 var port = process.env.PORT || 3030;
