@@ -8,8 +8,8 @@
     "postinstall": "bower cache clean && bower install"
   },
   "engines": {
-    "node":"0.10.x",
-    "npm":"1.4.x"
+    "node": "0.10.x",
+    "npm": "1.4.x"
   },
   "repository": {
     "type": "git",
@@ -23,12 +23,16 @@
   "homepage": "https://github.com/manikanta-cse/mean-app#readme",
   "dependencies": {
     "body-parser": "^1.17.1",
+    "bower": "^1.8.0",
+    "cookie-parser": "^1.4.3",
     "express": "^4.15.2",
+    "express-session": "^1.15.2",
     "jade": "^1.11.0",
     "mongoose": "^4.9.8",
     "morgan": "^1.8.1",
-    "stylus": "^0.54.5",
-    "bower": "^1.8.0"
+    "passport": "^0.3.2",
+    "passport-local": "^1.0.0",
+    "stylus": "^0.54.5"
   },
   "devDependencies": {
     "bower": "^1.8.0"

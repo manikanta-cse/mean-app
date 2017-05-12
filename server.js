@@ -1,47 +1,47 @@
 var express = require('express'),
-    stylus = require('stylus'),
-    logger = require('morgan'),
-    bodyParser = require('body-parser'),
-    mongoose = require('mongoose');
+    mongoose = require('mongoose'),
+    passport= require('passport'),
+    LocalStrategy=require('passport-local').Strategy;
 
-var env = process.env.NODE_ENV = process.env.NODE_ENV || 'development';
+var env = process.env.NODE_ENV = process.env.NODE_ENV || 'developement';
 
 var app = express();
 
-function compile(str, path) {
-    return stylus(str).set('filename', path);
-};
+var config = require('./server/config/config')[env];
 
-app.set('views', __dirname + '/server/views');
-app.set('view engine', 'jade');
-
-app.use(logger('dev'));
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({
-    extended: true
-}));
-
-app.use(stylus.middleware({
-    src: __dirname + '/public',
-    compile: compile
-}));
-
-app.use(express.static(__dirname + '/public'));
+//express
+require('./server/config/express')(app, config);
 
 //database
-if (env === 'development') {
-    mongoose.connect('mongodb://localhost/multivision');//local instance
-}
-else {
-    mongoose.connect('mongodb://mani:123456@ds137801.mlab.com:37801/meanwebapp'); //mongo db hosted on mlab
-}
+require('./server/config/mongoose')(config);
 
+var User= mongoose.model('User');
+passport.use(new LocalStrategy(function(username,password,done){
+    User.findOne({userName:username}).exec(function(err,user){
+        if(user){
+            return done(null,user);
+        }
+        else{
+            return done(null,false);
+        }
+    });
+}));
 
+passport.serializeUser(function(user,done){
+    if(user){
+        done(null,user._id);
+    }
+});
 
-var db = mongoose.connection;
-db.on('error', console.error.bind(console, 'connection error...'));
-db.once('open', function cb() {
-    console.log('db opended!');
+passport.deserializeUser(function(id,done){
+    User.findOne({_id:id}).exec(function(err,user){
+        if(user){
+            return done(null,user);
+        }
+        else{
+            return done(null,false);
+        }
+    });
 });
 
 //creating schema
@@ -53,14 +53,9 @@ db.once('open', function cb() {
 //     mongoMessage = messageDoc.message;
 // });
 
-app.get('/partials/:partialPath', function (req, resp) {
-    resp.render('partials/' + req.params.partialPath);
-});
+//routes
+require('./server/config/routes')(app);
 
-app.get('*', function (req, resp) {
-    resp.render('index');
-});
 
-var port = process.env.PORT || 3030;
-app.listen(port);
-console.log('Server running');
+app.listen(config.port);
+console.log('Server running'+ config.port);
