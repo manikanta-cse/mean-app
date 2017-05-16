@@ -1,4 +1,5 @@
-var mongoose = require('mongoose');
+var mongoose = require('mongoose'),
+    crypto = require('crypto');
 
 module.exports = function (config) {
     mongoose.connect(config.db); //mongo db hosted on mlab
@@ -9,19 +10,47 @@ module.exports = function (config) {
     });
 
 
-    var userSchema=mongoose.Schema({
-        firstName:String,
-        lastName:String,
-        userName:String
+    var userSchema = mongoose.Schema({
+        firstName: String,
+        lastName: String,
+        userName: String,
+        salt: String,
+        hashed_pwd: String,
+        roles: [String]
     });
 
-    var User=mongoose.model('User',userSchema);
+    userSchema.methods = {
+        authenticate: function (passwordToMatch) {
+            return hashPwd(this.salt, passwordToMatch) === this.hashed_pwd;
+        }
+    }
 
-    User.find({}).exec(function(err,collection){
-        if(collection.length==0){
-            User.create({firstName:'Mani',lastName:'K',userName:'mk'});
+    var User = mongoose.model('User', userSchema);
+
+    User.find({}).exec(function (err, collection) {
+        if (collection.length == 0) {
+            var salt, hash;
+            salt = createSalt();
+            hash = hashPwd(salt, 'mk');
+            User.create({ firstName: 'Mani', lastName: 'K', userName: 'mk', salt: salt, hashed_pwd: hash, roles: ['admin'] });
+            salt = createSalt();
+            hash = hashPwd(salt, 'bm');
+            User.create({ firstName: 'Bharat', lastName: 'M', userName: 'bm', salt: salt, hashed_pwd: hash, roles: [] });
         }
     });
 
 
 };
+
+
+function createSalt() {
+    return crypto.randomBytes(128).toString('base64');
+};
+
+function hashPwd(salt, pwd) {
+    var hmac = crypto.createHmac('sha1', salt);
+    hmac.setEncoding('hex');
+    hmac.write(pwd);
+    hmac.end();
+    return hmac.read();
+}

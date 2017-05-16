@@ -12,3 +12,26 @@ module.exports.authenticate = function (req, resp, next) {
     });
     auth(req, resp, next);
 };
+
+module.exports.requireApiLogin = function (req, resp, next) {
+    if (!req.isAuthenticated()) {
+        resp.status(403);
+        resp.end();
+    }
+    else {
+        next();
+    }
+};
+
+
+module.exports.requireRole = function (role) {
+    return function (req, resp, next) {
+        if (!req.isAuthenticated() || req.user.roles.indexOf(role) === -1) {
+            resp.status(403);
+            resp.end();
+        }
+        else {
+            next();
+        }
+    };
+};
