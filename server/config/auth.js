@@ -2,6 +2,7 @@ var passport = require('passport');
 
 
 module.exports.authenticate = function (req, resp, next) {
+    req.body.username=req.body.username.toLowerCase();
     var auth = passport.authenticate('local', function (err, user) {
         if (err) { return next(err); }
         if (!user) { resp.send({ success: false }); }
