@@ -7,6 +7,11 @@ angular.module('app').config(function ($routeProvider, $locationProvider) {
             auth: function (mvAuth) {
                 return mvAuth.authiorzeCurrentUserForRoute('admin');
             }
+        },
+        user: {
+            auth: function (mvAuth) {
+                return mvAuth.authiorzeAuthenticatedUserForRoute();
+            }
         }
     }
 
@@ -19,6 +24,7 @@ angular.module('app').config(function ($routeProvider, $locationProvider) {
             resolve: routeRoleChecks.admin
         })
         .when('/signup', { templateUrl: '/partials/account/signup', controller: 'mvSignUpCtrl' })
+        .when('/profile', { templateUrl: '/partials/account/profile', controller: 'mvProfileCtrl',resolve: routeRoleChecks.user })
 });
 
 
