@@ -1,5 +1,6 @@
 var mongoose = require('mongoose'),
-    userModel = require('../models/User');
+    userModel = require('../models/User'),
+    courseModel = require('../models/Course');;
 
 module.exports = function (config) {
     mongoose.connect(config.db); //mongo db hosted on mlab
@@ -10,6 +11,7 @@ module.exports = function (config) {
     });
 
     userModel.createDefaultUser();
+    courseModel.createDefaultCourses();
 
 
 };
