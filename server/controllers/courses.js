@@ -5,3 +5,9 @@ exports.getCourses=function(req,resp){
         resp.send(collection);
     });
 };
+
+exports.getCourseById=function(req,resp){
+    Course.findOne({_id:req.params.id}).exec(function(err,course){
+        resp.send(course);
+    });
+};
